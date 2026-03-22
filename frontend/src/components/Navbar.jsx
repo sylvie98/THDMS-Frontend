@@ -1,16 +1,23 @@
-import { useTheme } from "./context/ThemeContext";
-import { IconButton } from "@mui/material";
-import { LightMode, DarkMode } from "@mui/icons-material";
-
 export default function Navbar() {
-  const { mode, toggleMode } = useTheme();
+  const role = localStorage.getItem("role");
+
+  const handleLogout = () => {
+    localStorage.removeItem("role");
+    window.location.href = "/";
+  };
 
   return (
-    <div className="flex justify-between p-4 shadow bg-white dark:bg-gray-800">
-      <h1 className="font-bold text-lg text-green-700 dark:text-green-400">THDMS</h1>
-      <IconButton onClick={toggleMode}>
-        {mode === "light" ? <DarkMode /> : <LightMode />}
-      </IconButton>
-    </div>
+    <nav className="bg-white shadow px-6 py-3 flex justify-between items-center">
+      <h1 className="font-bold text-xl">THMDS Dashboard</h1>
+      <div>
+        <span className="mr-4 text-gray-700">Role: {role}</span>
+        <button
+          className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
+    </nav>
   );
 }

@@ -1,42 +1,46 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { users } from "../data/users";
-import { Button, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 export default function Login() {
-  const [selectedUser, setSelectedUser] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (!selectedUser) return toast.error("Select a user!");
-    localStorage.setItem("role", selectedUser.role);
-    toast.success(`Logged in as ${selectedUser.username}`);
-    navigate("/dashboard");
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (user) {
+      localStorage.setItem("role", user.role);
+      navigate("/dashboard");
+    } else {
+      alert("Invalid credentials");
+    }
   };
 
   return (
-    <div className="h-screen flex justify-center items-center bg-green-100 dark:bg-gray-900">
-      <div className="bg-white dark:bg-gray-800 p-8 rounded shadow w-96 space-y-4">
-        <h2 className="text-xl font-bold mb-4 text-green-700 dark:text-green-400">Login</h2>
-        <FormControl fullWidth>
-          <InputLabel>Select User</InputLabel>
-          <Select
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            renderValue={(v) => v?.username || ""}
-          >
-            {users.map(u => (
-              <MenuItem key={u.user_id} value={u}>{u.username} ({u.role})</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <Button variant="contained" color="success" fullWidth onClick={handleLogin}>
+    <div className="flex h-screen justify-center items-center bg-gray-100">
+      <div className="bg-white p-6 rounded shadow-md w-96">
+        <h2 className="text-2xl font-bold mb-4 text-center">THMDS Login</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          className="border p-2 w-full mb-3 rounded"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="border p-2 w-full mb-3 rounded"
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button
+          className="bg-green-700 text-white w-full py-2 rounded hover:bg-green-800"
+          onClick={handleLogin}
+        >
           Login
-        </Button>
+        </button>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }
